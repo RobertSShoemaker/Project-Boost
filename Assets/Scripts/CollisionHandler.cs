@@ -11,6 +11,8 @@ public class CollisionHandler : MonoBehaviour
 
     AudioSource audioSource;
 
+    bool isTransitioning = false;
+
 
     private void Start()
     {
@@ -19,6 +21,8 @@ public class CollisionHandler : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
+        if (isTransitioning) { return; }
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
@@ -37,6 +41,8 @@ public class CollisionHandler : MonoBehaviour
     //disable controls so that the player can't move after crashing
     void StartCrashSequence()
     {
+        isTransitioning = true;
+        audioSource.Stop();
         audioSource.PlayOneShot(crash);
         //todo add particle effect upon crash
         GetComponent<Movement>().enabled = false;
@@ -45,6 +51,8 @@ public class CollisionHandler : MonoBehaviour
 
     void StartSuccessSequence()
     {
+        isTransitioning = true;
+        audioSource.Stop();
         audioSource.PlayOneShot(success);
         //todo add particle effect upon success
         GetComponent<Movement>().enabled = false;
