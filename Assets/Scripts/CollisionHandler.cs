@@ -1,7 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
+    int currentSceneIndex;
+    private void Start()
+    {
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+    }
     void OnCollisionEnter(Collision collision)
     {
         switch (collision.gameObject.tag)
@@ -13,8 +19,13 @@ public class CollisionHandler : MonoBehaviour
                 Debug.Log("You finished the level!");
                 break;
             default:
-                Debug.Log("You blew up!");
+                ReloadLevel();
                 break;
         }
+    }
+
+    private void ReloadLevel()
+    {
+        SceneManager.LoadScene(currentSceneIndex);
     }
 }
