@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     int currentSceneIndex;
+
+    [SerializeField] float loadDelay = 1f;
     private void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -16,14 +18,31 @@ public class CollisionHandler : MonoBehaviour
                 Debug.Log("This thing is friendly");
                 break;
             case "Finish":
-                LoadNextLevel();
+                StartSuccessSequence();
                 break;
             default:
-                ReloadLevel();
+                StartCrashSequence();
                 break;
         }
     }
 
+    //load the next level after a short delay when the player crashes
+    //disable controls so that the player can't move after crashing
+    void StartCrashSequence()
+    {
+        //todo add SFX upon crash
+        //todo add particle effect upon crash
+        GetComponent<Movement>().enabled = false;
+        Invoke("ReloadLevel", loadDelay);
+    }
+
+    void StartSuccessSequence()
+    {
+        //todo add SFX upon success
+        //todo add particle effect upon success
+        GetComponent<Movement>().enabled = false;
+        Invoke("LoadNextLevel", loadDelay);
+    }
     private void ReloadLevel()
     {
         SceneManager.LoadScene(currentSceneIndex);
