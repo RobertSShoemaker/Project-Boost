@@ -16,7 +16,7 @@ public class CollisionHandler : MonoBehaviour
                 Debug.Log("This thing is friendly");
                 break;
             case "Finish":
-                Debug.Log("You finished the level!");
+                LoadNextLevel();
                 break;
             default:
                 ReloadLevel();
@@ -27,5 +27,17 @@ public class CollisionHandler : MonoBehaviour
     private void ReloadLevel()
     {
         SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    //Load the next level when the rocket reaches the landing pad
+    void LoadNextLevel()
+    {
+        int nextSceneIndex = currentSceneIndex + 1;
+        //if we are on the last level, then load the first level
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
+        SceneManager.LoadScene(nextSceneIndex);
     }
 }
