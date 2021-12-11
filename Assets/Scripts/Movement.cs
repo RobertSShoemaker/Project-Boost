@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    Rigidbody rb;
+    [SerializeField] float mainThrust = 1000f;
+    [SerializeField] float rotationThrust = 1000f;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -22,7 +26,7 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            Debug.Log("Pressed SPACE - Thrusting");
+            rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
         }
     }
 
@@ -30,12 +34,20 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            Debug.Log("rotate left");
+            ApplyRotation(rotationThrust);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("rotate right");
+            ApplyRotation(-rotationThrust);
         }
     }
 
+    void ApplyRotation(float rotationThisFrame)
+    {
+        //freeze rotation so we can manually rotate
+        rb.freezeRotation = true; 
+        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
+        //unfreeze rotation so the physics system can take over
+        rb.freezeRotation = false;
+    }
 }
