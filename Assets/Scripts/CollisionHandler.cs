@@ -6,9 +6,16 @@ public class CollisionHandler : MonoBehaviour
     int currentSceneIndex;
 
     [SerializeField] float loadDelay = 1f;
+    [SerializeField] AudioClip crash;
+    [SerializeField] AudioClip success;
+
+    AudioSource audioSource;
+
+
     private void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        audioSource = GetComponent<AudioSource>();
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -30,7 +37,7 @@ public class CollisionHandler : MonoBehaviour
     //disable controls so that the player can't move after crashing
     void StartCrashSequence()
     {
-        //todo add SFX upon crash
+        audioSource.PlayOneShot(crash);
         //todo add particle effect upon crash
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", loadDelay);
@@ -38,7 +45,7 @@ public class CollisionHandler : MonoBehaviour
 
     void StartSuccessSequence()
     {
-        //todo add SFX upon success
+        audioSource.PlayOneShot(success);
         //todo add particle effect upon success
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", loadDelay);
