@@ -29,51 +29,83 @@ public class Movement : MonoBehaviour
         ProcessRotation();
     }
 
+    //Move Rocket
     void ProcessThrust()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-            if (!audioSource.isPlaying)
-            {
-                audioSource.PlayOneShot(mainEngine);
-            }
-            if (!mainBoosterParticles.isPlaying)
-            {
-                mainBoosterParticles.Play();
-            }
+            StartThrusting();
         }
         else
         {
-            audioSource.Stop();
-            mainBoosterParticles.Stop();
+            StopThrusting();
         }
     }
 
+    //Rotate rocket
     private void ProcessRotation()
     {
         if (Input.GetKey(KeyCode.A))
         {
-            ApplyRotation(rotationThrust);
-            if (!rightBoosterParticles.isPlaying)
-            {
-                rightBoosterParticles.Play();
-            }
+            RotateLeft();
 
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            ApplyRotation(-rotationThrust);
-            if (!leftBoosterParticles.isPlaying)
-            {
-                leftBoosterParticles.Play();
-            }
+            RotateRight();
         }
         else
         {
-            rightBoosterParticles.Stop();
-            leftBoosterParticles.Stop();
+            StopRotating();
         }
+    }
+
+    //Move rocket upwards relative to the rocket, play engine audio and particle effects
+    private void StartThrusting()
+    {
+        rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(mainEngine);
+        }
+        if (!mainBoosterParticles.isPlaying)
+        {
+            mainBoosterParticles.Play();
+        }
+    }
+
+    //Stop the thrust audio and particles
+    private void StopThrusting()
+    {
+        audioSource.Stop();
+        mainBoosterParticles.Stop();
+    }
+
+    //Rotate the rocket to the left and play the right booster particles
+    private void RotateLeft()
+    {
+        ApplyRotation(rotationThrust);
+        if (!rightBoosterParticles.isPlaying)
+        {
+            rightBoosterParticles.Play();
+        }
+    }
+
+    //Rotate the rocket to the right and play the left booster particles
+    private void RotateRight()
+    {
+        ApplyRotation(-rotationThrust);
+        if (!leftBoosterParticles.isPlaying)
+        {
+            leftBoosterParticles.Play();
+        }
+    }
+
+    //Stop the booster particles
+    private void StopRotating()
+    {
+        rightBoosterParticles.Stop();
+        leftBoosterParticles.Stop();
     }
 
     void ApplyRotation(float rotationThisFrame)
