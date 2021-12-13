@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     int currentSceneIndex;
+    Collider[] colls;
 
     [SerializeField] float loadDelay = 1f;
     [SerializeField] AudioClip crash;
@@ -14,16 +15,30 @@ public class CollisionHandler : MonoBehaviour
     AudioSource audioSource;
 
     bool isTransitioning = false;
+    bool collisionDisabled = false;
 
 
     private void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         audioSource = GetComponent<AudioSource>();
+        colls = GetComponents<BoxCollider>();
     }
+
+    private void Update()
+    {
+        RespondToDebugKeys();
+    }
+
+    private void RespondToDebugKeys()
+    {
+        DebugLoad();
+        DebugCollision();
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (isTransitioning) { return; }
+        if (isTransitioning || collisionDisabled) { return; }
 
         switch (collision.gameObject.tag)
         {
@@ -36,6 +51,48 @@ public class CollisionHandler : MonoBehaviour
             default:
                 StartCrashSequence();
                 break;
+        }
+    }
+
+    //Debug load next level
+    void DebugLoad()
+    {
+        if (Input.GetKey(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+    }
+
+    //Disable collision for debugging
+    void DebugCollision()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionDisabled = !collisionDisabled; //toggle collision
+
+            //My original logic is here; much easier way is above in the OnCollisionEnter method
+            /*
+            //this will toggle between true and false without needing to explicitly change it like commented below
+            collisionDisabled = !collisionDisabled; 
+            if (!collisionDisabled)
+            {
+                //this will disable all of the colliders on our object
+                foreach (Collider col in colls)
+                {
+                    col.enabled = false;
+                }
+                //collisionDisabled = true;
+            } 
+            else
+            {
+                //this will enable all of the colliders on our object
+                foreach (Collider col in colls)
+                {
+                    col.enabled = true;
+                }
+                //collisionDisabled = false;
+            }
+            */
         }
     }
 
