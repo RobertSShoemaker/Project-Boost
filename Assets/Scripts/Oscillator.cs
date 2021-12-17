@@ -20,6 +20,10 @@ public class Oscillator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //prevents errors when period = 0 and tries to divide by 0
+        //epsilon is the smallest float value above 0
+        //comparing floats with == can cause issues, so we should use <= epsilon instead of == 0
+        if (period <= Mathf.Epsilon) { return; }
         //continually growing over time
         float cycles = Time.time / period; 
 
